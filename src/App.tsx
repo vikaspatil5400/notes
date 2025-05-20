@@ -28,8 +28,8 @@ function App() {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-teal-50 flex flex-col items-center justify-center p-4 md:p-8">
       <div className="w-full max-w-2xl transition-all duration-300 ease-in-out">
         <header className="mb-6 text-center relative">
-          <h1 className="text-3xl font-bold text-gray-800 mb-2">Canvas Notepad</h1>
-          <p className="text-gray-600">Your calendar-based math and notes workspace</p>
+          <h1 className="text-3xl font-bold text-gray-800 mb-2">CalsMath</h1>
+          <p className="text-gray-600">Smart Calculator & Notes with Calendar Integration</p>
           <button
             onClick={() => setShowSettings(!showSettings)}
             className="absolute right-0 top-0 p-2 rounded-md text-gray-600 hover:bg-gray-100/50 transition-colors"
