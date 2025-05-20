@@ -1,13 +1,39 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Calendar from './components/Calendar';
 import NoteView from './components/NoteView';
-import { Github, Globe, Settings } from 'lucide-react';
+import { Github, Globe, Settings, Database } from 'lucide-react';
 import useNotesStore from './store/useNotesStore';
 
 function App() {
   const [showNoteView, setShowNoteView] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
+  const [storageUsage, setStorageUsage] = useState('0 KB');
   const { resetAllData } = useNotesStore();
+  
+  useEffect(() => {
+    const calculateStorageUsage = () => {
+      let total = 0;
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key) {
+          total += localStorage.getItem(key)?.length || 0;
+        }
+      }
+      
+      // Convert to appropriate unit
+      if (total < 1024) {
+        setStorageUsage(`${total} B`);
+      } else if (total < 1024 * 1024) {
+        setStorageUsage(`${(total / 1024).toFixed(1)} KB`);
+      } else {
+        setStorageUsage(`${(total / (1024 * 1024)).toFixed(1)} MB`);
+      }
+    };
+
+    calculateStorageUsage();
+    window.addEventListener('storage', calculateStorageUsage);
+    return () => window.removeEventListener('storage', calculateStorageUsage);
+  }, []);
   
   const handleShowNotes = () => {
     setShowNoteView(true);
@@ -39,8 +65,12 @@ function App() {
           </button>
           
           {showSettings && (
-            <div className="absolute right-0 top-12 bg-white rounded-lg shadow-lg border border-gray-200 p-4 z-10">
+            <div className="absolute right-0 top-12 bg-white rounded-lg shadow-lg border border-gray-200 p-4 z-10 min-w-[200px]">
               <h3 className="text-lg font-medium text-gray-800 mb-4">Settings</h3>
+              <div className="flex items-center gap-2 text-sm text-gray-600 mb-4 p-2 bg-gray-50 rounded">
+                <Database className="h-4 w-4" />
+                <span>Storage used: {storageUsage}</span>
+              </div>
               <button
                 onClick={handleFactoryReset}
                 className="w-full px-4 py-2 text-red-600 hover:bg-red-50 rounded transition-colors text-left"
