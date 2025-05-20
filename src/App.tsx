@@ -8,32 +8,32 @@ function App() {
   const [showNoteView, setShowNoteView] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [storageUsage, setStorageUsage] = useState('0 KB');
-  const { resetAllData } = useNotesStore();
+  const { resetAllData, notes } = useNotesStore();
   
-  useEffect(() => {
-    const calculateStorageUsage = () => {
-      let total = 0;
-      for (let i = 0; i < localStorage.length; i++) {
-        const key = localStorage.key(i);
-        if (key) {
-          total += localStorage.getItem(key)?.length || 0;
-        }
+  const calculateStorageUsage = () => {
+    let total = 0;
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (key) {
+        total += (localStorage.getItem(key)?.length || 0) * 2; // Account for UTF-16 encoding
       }
-      
-      // Convert to appropriate unit
-      if (total < 1024) {
-        setStorageUsage(`${total} B`);
-      } else if (total < 1024 * 1024) {
-        setStorageUsage(`${(total / 1024).toFixed(1)} KB`);
-      } else {
-        setStorageUsage(`${(total / (1024 * 1024)).toFixed(1)} MB`);
-      }
-    };
+    }
+    
+    // Convert to appropriate unit
+    if (total < 1024) {
+      setStorageUsage(`${total} B`);
+    } else if (total < 1024 * 1024) {
+      setStorageUsage(`${(total / 1024).toFixed(1)} KB`);
+    } else {
+      setStorageUsage(`${(total / (1024 * 1024)).toFixed(1)} MB`);
+    }
+  };
 
+  useEffect(() => {
     calculateStorageUsage();
     window.addEventListener('storage', calculateStorageUsage);
     return () => window.removeEventListener('storage', calculateStorageUsage);
-  }, []);
+  }, [notes]); // Recalculate when notes change
   
   const handleShowNotes = () => {
     setShowNoteView(true);
@@ -47,6 +47,7 @@ function App() {
     if (window.confirm('Are you sure you want to delete all notes? This action cannot be undone.')) {
       resetAllData();
       setShowSettings(false);
+      calculateStorageUsage(); // Recalculate after reset
     }
   };
   
