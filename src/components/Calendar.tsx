@@ -2,11 +2,15 @@ import React from 'react';
 import CalendarHeader from './CalendarHeader';
 import CalendarGrid from './CalendarGrid';
 
-const Calendar: React.FC = () => {
+interface CalendarProps {
+  onDateDoubleClick: () => void;
+}
+
+const Calendar: React.FC<CalendarProps> = ({ onDateDoubleClick }) => {
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden transition-all">
       <CalendarHeader />
-      <CalendarGrid />
+      <CalendarGrid onDateDoubleClick={onDateDoubleClick} />
     </div>
   );
 };

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Calendar from './components/Calendar';
 import NoteView from './components/NoteView';
-import { PenSquare, Github, Globe, Settings } from 'lucide-react';
+import { Github, Globe, Settings } from 'lucide-react';
 import useNotesStore from './store/useNotesStore';
 
 function App() {
@@ -55,18 +55,7 @@ function App() {
           {showNoteView ? (
             <NoteView onBackToCalendar={handleBackToCalendar} />
           ) : (
-            <>
-              <Calendar />
-              <button
-                id="openNotesBtn"
-                onClick={handleShowNotes}
-                className="mt-4 w-full py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-lg shadow-md flex items-center justify-center transition-colors"
-                aria-label="Open notes"
-              >
-                <PenSquare className="mr-2 h-5 w-5" />
-                <span>Open Notes</span>
-              </button>
-            </>
+            <Calendar onDateDoubleClick={handleShowNotes} />
           )}
         </div>
         

@@ -6,7 +6,11 @@ import { formatDate } from '../utils/dateUtils';
 
 const DAYS_OF_WEEK = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
-const CalendarGrid: React.FC = () => {
+interface CalendarGridProps {
+  onDateDoubleClick: () => void;
+}
+
+const CalendarGrid: React.FC<CalendarGridProps> = ({ onDateDoubleClick }) => {
   const { currentDate, selectedDate, setSelectedDate } = useCalendarStore();
   const { notes } = useNotesStore();
   const calendarDays = getCalendarDays(currentDate);
@@ -41,7 +45,7 @@ const CalendarGrid: React.FC = () => {
                 onClick={() => handleDayClick(day)}
                 onDoubleClick={() => {
                   handleDayClick(day);
-                  document.getElementById('openNotesBtn')?.click();
+                  onDateDoubleClick();
                 }}
               >
                 {day && formatDayOfMonth(day)}
